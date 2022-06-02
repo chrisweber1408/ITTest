@@ -15,11 +15,14 @@ import java.util.List;
 @RequestMapping("/github")
 public class GitHubController {
 
+    private final GitHubService gitHubService;
+
+    public GitHubController(GitHubService gitHubService) {
+        this.gitHubService = gitHubService;
+    }
+
     @GetMapping("/{name}")
     public List<String> getRepositorys(@PathVariable String name){
-        RestTemplate restTemplate = new RestTemplate();
-        return Arrays.stream(restTemplate.getForObject("https://api.github.com/users/" + name + "/repos", GitHubRepository[].class))
-                .map(GitHubRepository::getName)
-                .toList();
+        return gitHubService.findReposByName(name);
     }
 }
